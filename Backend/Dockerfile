@@ -14,4 +14,5 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Command to start the FastAPI server using Uvicorn
-CMD ["python", "Backend/main.py", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
