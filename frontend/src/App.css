@@ -8,49 +8,39 @@ a{
   font-size: 1rem;
   font-weight: bold;
   transition: color 0.01s;
+
 }
 
 a:hover{
-  color: #E3181B;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  font-weight: bold;
+  color: #8EC5FC;
   cursor: pointer;
-  transition: color 1s;
+  transition: color 0.25s;
 }
 
 header {
   position: relative;
-  padding: 0 2rem;
 }
 
 .navbar {
-  width: 100%;
   height: 60px;
-  max_width: 100%;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-direction: horizontal;
   position: relative;
+  background-color: #308FDD;
 }
 
 .navbar .logo a {
   font-size: 1.5rem;
   font-weight: bold;
+  padding: 0 20px;
 }
 
 .navbar .links {
   display: flex;
   gap: 2rem;
-}
-
-.navbar .toggle_btn {
-  color: #fff;
-  font-size: 1.5rem;
-  cursor: pointer;
-  display: none;
+  padding: 0 20px;
 }
 
 section#hero {
@@ -60,15 +50,15 @@ section#hero {
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: #fff;
+  color: #0A375D;
 }
 
 .home_buttons button {
-  border: 1px solid #fff;
-  background-color: transparent;
+  border: 1px solid #0A375D;
+  background-color: #8EC5FC;
+  color: #0A375D;
   height: 250px;
   width: 200px;
-  color: #fff;
   font-size: 1.5em;
   padding: 0px;
   line-height: 0px;
@@ -77,11 +67,12 @@ section#hero {
   border-radius: 20px;
   font-weight: bold;
   margin: 30px;
-  transition: background-color 1s;
+  transition: background-color 0.25s, color 0.25s;
 }
 
 .home_buttons button:hover {
-  background-color: #E3181B;
+  background-color: #308FDD;
+  color: #fff;
 }
 
 #hero h1 {
