@@ -7,20 +7,17 @@ a{
   color: #fff;
   font-size: 1rem;
   font-weight: bold;
-  transition: background-color 0.01s;
+  transition: color 0.01s;
 }
 
 a:hover{
-  background-color: #E3181B;
-  color: #fff;
-  padding: 0.5rem 1rem;
+  color: #E3181B;
   border: none;
   outline: none;
-  border-radius: 20px;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 1s;
+  transition: color 1s;
 }
 
 header {
