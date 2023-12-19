@@ -1,3 +1,7 @@
+import Navbar from "../components/Navbar.js"
+import UploadsPage from "./UploadsPage.js"
+
+import { Outlet, Link } from "react-router-dom";
 
 function SplashPage() {
     return (
@@ -6,9 +10,10 @@ function SplashPage() {
                 <h1>GNSS Reflectometry Service</h1>
                 <p>Welcome to the GNSS Reflectometry Service</p>
                 <div class="home_buttons">
-                    <button>UPLOADS</button>
-                     <button>ANALYSIS</button>
+                    <Link to="/uploads"><button>UPLOADS</button></Link>
+                    <Link to="/analysis"><button>ANALYSIS</button></Link>
                 </div>
+                <Outlet />
             </section>
         </main>
   );
