@@ -1,0 +1,26 @@
+.subnavbarbutton {
+    border: transparent;
+    background-color: #8EC5FC;
+    color: #0A375D;
+    font-size: 1em;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0 2rem;
+    height: 30px;
+    transition: background-color 0.25s, color 0.25s;
+}
+
+.subnavbarbutton:hover {
+    background-color: #0A375D;
+    color: #fff;
+    transition: background-color 0.25s, color 0.25s;
+}
+
+.subnavbar {
+    height: 30px;
+    background-color: #8EC5FC;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
