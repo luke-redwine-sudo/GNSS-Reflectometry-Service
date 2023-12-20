@@ -1,7 +1,11 @@
+import UploadsSubNavBar from '../components/UploadsSubNavBar.js'
 
 function UploadsPage () {
     return (
-        <h1>THIS IS THE UPLOADS PAGE</h1>
+        <div>
+            <UploadsSubNavBar />
+            <h1>THIS IS THE UPLOADS PAGE</h1>
+        </div>
     );
 }
 
