@@ -2,6 +2,7 @@ import SubNavBarButton from './SubNavBarButton.js'
 import './components_css/SubNavBar.css'
 
 function UploadsSubNavBar () {
+
     return (
         <div class="subnavbar">
             <SubNavBarButton label={"Phone Data"}/>
