@@ -1,0 +1,12 @@
+
+.uploadsbanner {
+    font-size: 3rem;
+    margin: 1.5rem 0rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #0A375D;
+    font-weight: bold;
+}

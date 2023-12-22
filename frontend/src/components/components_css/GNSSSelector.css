@@ -1,0 +1,22 @@
+.gnssselectorwrapper {
+    border: 2px solid #0A375D;
+    border-radius: 20px;
+    margin: 15px;
+    height: 45px;
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gnssselectorlabel {
+    font-weight: bold;
+    color: #0A375D;
+    margin: 0.5rem 0.2rem;
+}
+
+.gnssselector {
+    font-weight: bold;
+    color: #0A375D;
+    margin: 0.5rem 0.2rem;
+}

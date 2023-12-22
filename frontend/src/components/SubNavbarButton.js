@@ -1,9 +1,9 @@
-import './components_css/SubNavBar.css'
+import './components_css/SubNavbar.css'
 
-function SubNavBarButton(props) {
+function SubNavbarButton(props) {
     return (
         <button class="subnavbarbutton" onClick={props.handleClick}>{props.label}</button>
     );
 }
 
-export default SubNavBarButton
+export default SubNavbarButton
