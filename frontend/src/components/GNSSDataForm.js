@@ -7,17 +7,16 @@ import GNSSSelector from './GNSSSelector.js';
 import TideTextInput from './TideTextInput.js';
 import UploadSubmitButton from './UploadSubmitButton.js'
 
+import './components_css/GNSSDataForm.css'
+
 function GNSSDataForm() {
 
     return (
-
-        <div>
-            <h1>GNSSDataForm</h1>
-            <Datetime />
-            <FileInput inputname={"GNSS"} filetype={".23O"}/>
+        <div class="gnssformorg">
+            <h1>GNSS Data Form</h1>
             <LocationTextInput />
             <GNSSSelector />
-            <TideTextInput />
+            <FileInput inputname={"GNSS"} filetype={".23O"}/>
             <UploadSubmitButton />
         </div>
     );
