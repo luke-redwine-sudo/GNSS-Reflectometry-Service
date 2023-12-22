@@ -1,12 +1,14 @@
-import UploadsSubNavBar from '../components/UploadsSubNavBar.js'
+import UploadsSubNavbar from '../components/UploadsSubNavbar.js'
 import GNSSDataForm from '../components/GNSSDataForm.js'
 import VideoForm from '../components/VideoForm.js'
 import FlightDataForm from '../components/FlightDataForm.js'
 import WeatherDataForm from '../components/WeatherDataForm.js'
 
+import './pages_css/UploadsPage.css'
+
 import {useState} from 'react';
 
-function UploadsPage () {
+function UploadsPage() {
 
     const [GNSSIsShown, setGNSSIsShown] = useState(true);
     const [weatherIsShown, setWeatherIsShown] = useState(false);
@@ -45,8 +47,8 @@ function UploadsPage () {
 
     return (
         <div>
-            <UploadsSubNavBar clickEventHandlers={ clickEventHandlers } />
-            <h>THIS IS THE UPLOADS PAGE</h>
+            <UploadsSubNavbar clickEventHandlers={ clickEventHandlers } />
+            <h class="uploadsbanner">UPLOADS</h>
             {GNSSIsShown && (<GNSSDataForm />)}
             {weatherIsShown && (<WeatherDataForm />)}
             {flightIsShown && (<FlightDataForm />)}
