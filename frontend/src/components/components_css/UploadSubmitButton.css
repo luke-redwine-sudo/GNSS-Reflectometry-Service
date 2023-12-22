@@ -1,7 +1,7 @@
 .uploadsubmitbutton {
-    border: 1px solid #0A375D;
-    background-color: #308FDD;
-    color: #fff;
+    border: 2px solid #C4E1F3;
+    background-color: #0A375D;
+    color: #8EC5FC;
     height: 50px;
     width: 180px;
     font-size: 1em;
@@ -15,5 +15,7 @@
 }
 
 .uploadsubmitbutton:hover {
-    background-color: #0A375D;
+    border: 2px solid #0A375D;
+    background-color: #fff;
+    color: #0A375D;
 }

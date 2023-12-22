@@ -49,10 +49,12 @@ function UploadsPage() {
         <div>
             <UploadsSubNavbar clickEventHandlers={ clickEventHandlers } />
             <h class="uploadsbanner">UPLOADS</h>
-            {GNSSIsShown && (<GNSSDataForm />)}
-            {weatherIsShown && (<WeatherDataForm />)}
-            {flightIsShown && (<FlightDataForm />)}
-            {videoIsShown && (<VideoForm />)}
+            <div class="formposition">
+                {GNSSIsShown && (<GNSSDataForm />)}
+                {weatherIsShown && (<WeatherDataForm />)}
+                {flightIsShown && (<FlightDataForm />)}
+                {videoIsShown && (<VideoForm />)}
+            </div>
         </div>
     );
 }
