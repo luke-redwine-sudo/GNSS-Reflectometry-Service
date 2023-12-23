@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import ReactDOM from 'react-dom/client';
+import axios from 'axios';
+
 import Datetime from './Datetime.js';
 import FileInput from './FileInput.js';
 import LocationTextInput from './LocationTextInput.js';
@@ -12,14 +14,45 @@ import './components_css/GNSSDataForm.css'
 function GNSSDataForm() {
 
     const [formData, setFormData] = useState({location: "Jeanette Creek",source: "Drone",data: ""});
+    const [uploadedFileURL, setUploadedFileURL] = useState(null);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
     };
 
-    const handleSubmit = (event) => {
-        alert(`Location: ${formData.location}, Source: ${formData.source}, Data: ${formData.data}`);
+    const handleSubmit = async (event) => {
+        alert(`Data: ${formData.data}`);
+        event.preventDefault();
+
+        // Create FormData object and append data
+        const formDataToSend = new FormData();
+        formDataToSend.append('data', formData.data);
+        formDataToSend.append('source', formData.source);
+        formDataToSend.append('location', formData.location);
+
+        try {
+            // Use Axios to make a POST request
+            const response = await axios.post('http://localhost:8000/upload', formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+            });
+
+            // Assuming the backend returns a URL for the uploaded file
+            setUploadedFileURL(response.data.fileURL);
+
+            // Handle the response or perform additional actions as needed
+            console.log(response.data);
+
+        } catch (error) {
+            // Check if there are any validation errors in the response
+            if (error.response && error.response.status === 422) {
+                console.log('Validation Error:', error.response.data.detail);
+            } else {
+                console.error('Error uploading file:', error);
+            }
+        }
     };
 
     return (

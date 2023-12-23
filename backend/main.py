@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,9 +24,13 @@ collection = db["files"]
 
 
 @app.post("/upload")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(data: str = Form(...), source: str = Form(...), location: str = Form(...)):
     try:
-        contents = await file.read()
+        print(data)
+        print(source)
+        print(location)
+        contents = await data.read()
+        print(contents)
         file_id = await collection.insert_one({"file_contents": contents})
         return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
     except Exception as e:
