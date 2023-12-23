@@ -3,7 +3,7 @@ import './components_css/UploadSubmitButton.css'
 function UploadSubmitButton() {
 
     return (
-        <button class="uploadsubmitbutton">SUBMIT DATA</button>
+        <button type="submit" class="uploadsubmitbutton">SUBMIT DATA</button>
     );
 
 }
