@@ -15,3 +15,13 @@
     color: #0A375D;
     margin: 0.5rem 0.2rem;
 }
+
+.filebutton {
+    border: 1px solid #000;
+    height: 20px;
+    width: 75px;
+    background-color: #fff;
+    color: #0A375D;
+    font-weight: bold;
+    margin: 0.5rem 0rem;
+}
