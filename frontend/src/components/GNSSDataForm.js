@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDropzone } from 'react-dropzone'
 import ReactDOM from 'react-dom/client';
 import axios from 'axios';
 
@@ -13,8 +14,23 @@ import './components_css/GNSSDataForm.css'
 
 function GNSSDataForm() {
 
-    const [formData, setFormData] = useState({location: "Jeanette Creek",source: "Drone",data: ""});
+    const [formData, setFormData] = useState({location: "Jeanette Creek",source: "Drone",data: null, dataFileName:""});
     const [uploadedFileURL, setUploadedFileURL] = useState(null);
+
+    const { getRootProps, getInputProps, open } = useDropzone({
+        className: "dropzone",
+        noClick: true,
+        noKeyboard: true,
+        accept: {
+            "23o/plain": [".23o"],
+        },
+        onDrop: (acceptedFile) => {
+            acceptedFile.forEach((file) => {
+                setFormData((prevFormData) => ({ ...prevFormData, ["data"]: file }));
+                setFormData((prevFormData) => ({ ...prevFormData, ["dataFileName"]: file.name }));
+            })
+        },
+    });
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -22,12 +38,12 @@ function GNSSDataForm() {
     };
 
     const handleSubmit = async (event) => {
-        alert(`Data: ${formData.data}`);
         event.preventDefault();
 
         // Create FormData object and append data
         const formDataToSend = new FormData();
         formDataToSend.append('data', formData.data);
+        formDataToSend.append('dataFileName', formData.dataFileName);
         formDataToSend.append('source', formData.source);
         formDataToSend.append('location', formData.location);
 
@@ -61,7 +77,7 @@ function GNSSDataForm() {
                 <h1>GNSS Data Form</h1>
                 <LocationTextInput name="location" value={formData.location} onChange={handleChange}/>
                 <GNSSSelector name="source" value={formData.source} onChange={handleChange} />
-                <FileInput name="data" value={formData.data} onChange={handleChange} inputname={"GNSS"} filetype={".23O"}/>
+                <FileInput name="data" value={formData.data} onClick={open} inputname="GNSS" filetype=".23O"/>
                 <UploadSubmitButton />
             </form>
         </div>

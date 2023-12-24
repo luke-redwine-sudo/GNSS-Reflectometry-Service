@@ -24,14 +24,15 @@ collection = db["files"]
 
 
 @app.post("/upload")
-async def upload_file(data: str = Form(...), source: str = Form(...), location: str = Form(...)):
+async def upload_file(data: UploadFile = Form(...), dataFileName: str = Form(...), source: str = Form(...), location: str = Form(...)):
     try:
         print(data)
         print(source)
         print(location)
+        print(dataFileName)
         contents = await data.read()
         print(contents)
-        file_id = await collection.insert_one({"file_contents": contents})
+        file_id = await collection.insert_one({"file_contents": dataFileName})
         return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e))
