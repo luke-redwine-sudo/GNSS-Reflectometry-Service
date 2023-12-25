@@ -12,12 +12,12 @@ import './components_css/SatelliteDataForm.css'
 
 function SatelliteDataForm() {
 
-    const [formData, setFormData] = useState({location: "Jeanette Creek", data: null, dataFileName:""});
+    const [formData, setFormData] = useState({data: null, dataFileName:""});
     const [isSubmitDisabled, setSubmitDisabled] = useState(true);
         const [uploadedFileURL, setUploadedFileURL] = useState(null);
 
     useEffect(() => {
-        if (formData.location != "" && formData.data != null && formData.dataFileName != "") {
+        if (formData.data != null && formData.dataFileName != "") {
             setSubmitDisabled(false);
         }
         else {
@@ -53,7 +53,6 @@ function SatelliteDataForm() {
         const formDataToSend = new FormData();
         formDataToSend.append('data', formData.data);
         formDataToSend.append('dataFileName', formData.dataFileName);
-        formDataToSend.append('location', formData.location);
 
         try {
             // Use Axios to make a POST request
@@ -85,7 +84,6 @@ function SatelliteDataForm() {
             <form onSubmit={handleSubmit}>
                 <h1>Satellite Data Form</h1>
                 <div class="satellitelocationdiv">
-                    <LocationTextInput name="location" value={formData.location} onChange={handleChange}/>
                     <FileInput name="data" value={formData.data} onClick={open} filename={formData.dataFileName} inputname="Satellite" filetype=".csv"/>
                 </div>
                 <UploadSubmitButton isSubmitDisabled={isSubmitDisabled}/>
