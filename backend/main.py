@@ -57,10 +57,9 @@ async def upload_weather(data: UploadFile = Form(...), date: str = Form(...), ti
         raise HTTPException(status_code=422, detail=str(e))
 
 @app.post("/upload_satellite")
-async def upload_satellite(data: UploadFile = Form(...), dataFileName: str = Form(...), location: str = Form(...)):
+async def upload_satellite(data: UploadFile = Form(...), dataFileName: str = Form(...)):
     try:
         print(data)
-        print(location)
         print(dataFileName)
         file_id = await collection.insert_one({"file_contents": dataFileName})
         return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
