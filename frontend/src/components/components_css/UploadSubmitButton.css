@@ -19,3 +19,9 @@
     background-color: #fff;
     color: #0A375D;
 }
+
+.uploadsubmitbutton:disabled {
+    border: 2px solid #0A375D;
+    background-color: #808080;
+    color: #fff;
+}

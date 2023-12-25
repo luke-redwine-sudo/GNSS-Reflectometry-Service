@@ -22,9 +22,13 @@ client = AsyncIOMotorClient(MONGO_URI)
 db = client["fileDB"]
 collection = db["files"]
 
+@app.get('/')
+async def health_check():
+    return {"status": "Healthy"}
 
-@app.post("/upload")
-async def upload_file(data: UploadFile = Form(...), dataFileName: str = Form(...), source: str = Form(...), location: str = Form(...)):
+
+@app.post("/upload_gnss")
+async def upload_gnss(data: UploadFile = Form(...), dataFileName: str = Form(...), source: str = Form(...), location: str = Form(...)):
     try:
         print(data)
         print(source)
@@ -33,6 +37,55 @@ async def upload_file(data: UploadFile = Form(...), dataFileName: str = Form(...
         contents = await data.read()
         print(contents)
         file_id = await collection.insert_one({"file_contents": dataFileName})
+        return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+@app.post("/upload_weather")
+async def upload_weather(data: UploadFile = Form(...), date: str = Form(...), time: str = Form(...), tide: float = Form(...), dataFileName: str = Form(...), location: str = Form(...)):
+    try:
+        print(data)
+        print(location)
+        print(dataFileName)
+        print(date)
+        print(time)
+        print(tide)
+        contents = await data.read()
+        file_id = await collection.insert_one({"file_contents": dataFileName})
+        return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+@app.post("/upload_satellite")
+async def upload_satellite(data: UploadFile = Form(...), dataFileName: str = Form(...), location: str = Form(...)):
+    try:
+        print(data)
+        print(location)
+        print(dataFileName)
+        file_id = await collection.insert_one({"file_contents": dataFileName})
+        return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+@app.post("/upload_flight")
+async def upload_flight(data: UploadFile = Form(...), dataFileName: str = Form(...), location: str = Form(...)):
+    try:
+        print(data)
+        print(location)
+        print(dataFileName)
+        contents = await data.read()
+        file_id = await collection.insert_one({"file_contents": dataFileName})
+        return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+@app.post("/upload_video")
+async def upload_video(video: UploadFile = Form(...), videoFileName: str = Form(...), location: str = Form(...)):
+    try:
+        print(video)
+        print(location)
+        print(videoFileName)
+        file_id = await collection.insert_one({"file_contents": videoFileName})
         return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
     except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))

@@ -1,9 +1,9 @@
 import './components_css/UploadSubmitButton.css'
 
-function UploadSubmitButton() {
+function UploadSubmitButton(props) {
 
     return (
-        <button type="submit" class="uploadsubmitbutton">SUBMIT DATA</button>
+        <button type="submit" class="uploadsubmitbutton" disabled={props.isSubmitDisabled}>SUBMIT DATA</button>
     );
 
 }
