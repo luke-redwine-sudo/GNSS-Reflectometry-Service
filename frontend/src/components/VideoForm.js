@@ -86,7 +86,7 @@ function VideoForm() {
 
         <div class="videoformorg">
             <form onSubmit={handleSubmit}>
-                <h1>Flight Data Form</h1>
+                <h1>Video Data Form</h1>
                 <div class="videolocationdiv">
                     <LocationTextInput name="location" value={formData.location} onChange={handleChange}/>
                     <FileInput name="video" value={formData.video} onClick={open} filename={formData.videoFileName} inputname="Video" filetype=".mp4"/>
