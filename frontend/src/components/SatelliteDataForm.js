@@ -31,7 +31,7 @@ function SatelliteDataForm() {
         noClick: true,
         noKeyboard: true,
         accept: {
-            "csv/plain": [".csv"],
+            "ngz/plain": [".ngz"],
         },
         onDrop: (acceptedFile) => {
             acceptedFile.forEach((file) => {
@@ -57,7 +57,7 @@ function SatelliteDataForm() {
 
         try {
             // Use Axios to make a POST request
-            const response = await axios.post('http://localhost:8000/upload_flight', formDataToSend, {
+            const response = await axios.post('http://localhost:8000/upload_satellite', formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
