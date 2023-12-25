@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone'
 import ReactDOM from 'react-dom/client';
 import axios from 'axios';
 
-import Datetime from './Datetime.js';
 import FileInput from './FileInput.js';
 import LocationTextInput from './LocationTextInput.js';
 import GNSSSelector from './GNSSSelector.js';
@@ -15,7 +14,18 @@ import './components_css/GNSSDataForm.css'
 function GNSSDataForm() {
 
     const [formData, setFormData] = useState({location: "Jeanette Creek",source: "Drone",data: null, dataFileName:""});
+    const [isSubmitDisabled, setSubmitDisabled] = useState(true);
     const [uploadedFileURL, setUploadedFileURL] = useState(null);
+
+    useEffect(() => {
+        if (formData.location != "" && formData.source != "" && formData.data != null && formData.dataFileName != "") {
+            setSubmitDisabled(false);
+        }
+        else {
+            setSubmitDisabled(true);
+
+        }
+    });
 
     const { getRootProps, getInputProps, open } = useDropzone({
         className: "dropzone",
@@ -49,7 +59,7 @@ function GNSSDataForm() {
 
         try {
             // Use Axios to make a POST request
-            const response = await axios.post('http://localhost:8000/upload', formDataToSend, {
+            const response = await axios.post('http://localhost:8000/upload_gnss', formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
@@ -77,8 +87,8 @@ function GNSSDataForm() {
                 <h1>GNSS Data Form</h1>
                 <LocationTextInput name="location" value={formData.location} onChange={handleChange}/>
                 <GNSSSelector name="source" value={formData.source} onChange={handleChange} />
-                <FileInput name="data" value={formData.data} onClick={open} inputname="GNSS" filetype=".23O"/>
-                <UploadSubmitButton />
+                <FileInput name="data" value={formData.data} onClick={open} filename={formData.dataFileName} inputname="GNSS" filetype=".23O"/>
+                <UploadSubmitButton isSubmitDisabled={isSubmitDisabled}/>
             </form>
         </div>
     );
