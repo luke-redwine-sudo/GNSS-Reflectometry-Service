@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.1",
+    "@mui/x-date-pickers": "^6.18.5",
+    "axios": "^1.6.2",
+    "datetime-picker": "^0.6.0",
+    "dayjs": "^1.11.10",
+    "native-datepicker": "^1.1.1",
+    "react-datetime": "^3.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-hook-form": "^7.49.2",
+    "react-select": "^5.8.0"
+  }
+}
