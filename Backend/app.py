@@ -6,6 +6,8 @@ from bson import ObjectId
 import os
 import csv, re
 
+import weather_data_service
+
 app = FastAPI()
 
 # Enable CORS (Cross-Origin Resource Sharing)
@@ -73,6 +75,8 @@ async def upload_weather(data: UploadFile = Form(...), date: str = Form(...), ti
         with open(file_path, 'w') as file:
             # Write content to the file
             file.write("".join(contents.decode("utf-8")))
+
+        await weather_data_service.combine_weather_data(file_path, date, time, tide, location)
 
         file_id = await weather_file_collection.insert_one({"file_name": dataFileName, "file_path": file_path, "date": date, "time": time, "tide": tide, "location": location})
         return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
