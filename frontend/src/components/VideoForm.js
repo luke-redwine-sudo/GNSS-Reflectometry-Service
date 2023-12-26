@@ -17,7 +17,9 @@ function VideoForm() {
 
     const [formData, setFormData] = useState({location: "Jeanette Creek", video: null, videoFileName:""});
     const [isSubmitDisabled, setSubmitDisabled] = useState(true);
-        const [uploadedFileURL, setUploadedFileURL] = useState(null);
+    const [uploadedFileURL, setUploadedFileURL] = useState(null);
+    const [uploadStatus, setUploadStatus] = useState("");
+    const [uploadStatusColor, setUploadStatusColor] = useState("#8EC5FC");
 
     useEffect(() => {
         if (formData.location != "" && formData.video != null && formData.videoFileName != "") {
@@ -51,6 +53,8 @@ function VideoForm() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setSubmitDisabled(true);
+        setUploadStatus(`Uploading ${formData.videoFileName}...`);
 
         // Create FormData object and append data
         const formDataToSend = new FormData();
@@ -69,8 +73,11 @@ function VideoForm() {
             // Assuming the backend returns a URL for the uploaded file
             setUploadedFileURL(response.data.fileURL);
 
-            // Handle the response or perform additional actions as needed
-            console.log(response.data);
+            if (response.status == 200) {
+                setSubmitDisabled(false);
+                setUploadStatus(`Successfully uploaded ${formData.videoFileName}!`);
+                setUploadStatusColor("green");
+            }
 
         } catch (error) {
             // Check if there are any validation errors in the response
@@ -79,6 +86,9 @@ function VideoForm() {
             } else {
                 console.error('Error uploading file:', error);
             }
+
+            setUploadStatus(`Failed to upload ${formData.videoFileName}`);
+            setUploadStatusColor("red");
         }
     };
 
@@ -93,6 +103,7 @@ function VideoForm() {
                 </div>
                 <UploadSubmitButton isSubmitDisabled={isSubmitDisabled}/>
             </form>
+            <small><font color={uploadStatusColor}>{uploadStatus}</font></small>
         </div>
 
     );

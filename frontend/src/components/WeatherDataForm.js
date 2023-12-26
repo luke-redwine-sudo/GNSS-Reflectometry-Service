@@ -18,7 +18,9 @@ function WeatherDataForm() {
 
     const [formData, setFormData] = useState({location: "Jeanette Creek", date: "", time: "", tide: null, data: null, dataFileName:""});
     const [isSubmitDisabled, setSubmitDisabled] = useState(true);
-        const [uploadedFileURL, setUploadedFileURL] = useState(null);
+    const [uploadedFileURL, setUploadedFileURL] = useState(null);
+    const [uploadStatus, setUploadStatus] = useState("");
+    const [uploadStatusColor, setUploadStatusColor] = useState("#8EC5FC");
 
     useEffect(() => {
         if (formData.location != "" && formData.date != "" && formData.time != "" && formData.tide != null && formData.data != null && formData.dataFileName != "") {
@@ -26,7 +28,6 @@ function WeatherDataForm() {
         }
         else {
             setSubmitDisabled(true);
-
         }
     });
 
@@ -52,6 +53,8 @@ function WeatherDataForm() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setSubmitDisabled(true);
+        setUploadStatus(`Uploading ${formData.dataFileName}...`);
 
         // Create FormData object and append data
         const formDataToSend = new FormData();
@@ -73,8 +76,11 @@ function WeatherDataForm() {
             // Assuming the backend returns a URL for the uploaded file
             setUploadedFileURL(response.data.fileURL);
 
-            // Handle the response or perform additional actions as needed
-            console.log(response.data);
+            if (response.status == 200) {
+                setSubmitDisabled(false);
+                setUploadStatus(`Successfully uploaded ${formData.dataFileName}!`);
+                setUploadStatusColor("green");
+            }
 
         } catch (error) {
             // Check if there are any validation errors in the response
@@ -83,6 +89,9 @@ function WeatherDataForm() {
             } else {
                 console.error('Error uploading file:', error);
             }
+
+            setUploadStatus(`Failed to upload ${formData.dataFileName}`);
+            setUploadStatusColor("red");
         }
     };
 
@@ -106,6 +115,7 @@ function WeatherDataForm() {
                 </div>
                 <UploadSubmitButton isSubmitDisabled={isSubmitDisabled}/>
             </form>
+            <small><font color={uploadStatusColor}>{uploadStatus}</font></small>
         </div>
 
     );

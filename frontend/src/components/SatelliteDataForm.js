@@ -14,7 +14,10 @@ function SatelliteDataForm() {
 
     const [formData, setFormData] = useState({data: null, dataFileName:""});
     const [isSubmitDisabled, setSubmitDisabled] = useState(true);
-        const [uploadedFileURL, setUploadedFileURL] = useState(null);
+    const [uploadedFileURL, setUploadedFileURL] = useState(null);
+    const [uploadStatus, setUploadStatus] = useState("");
+    const [uploadStatusColor, setUploadStatusColor] = useState("#8EC5FC");
+
 
     useEffect(() => {
         if (formData.data != null && formData.dataFileName != "") {
@@ -48,6 +51,9 @@ function SatelliteDataForm() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setSubmitDisabled(true);
+        setUploadStatus(`Uploading ${formData.dataFileName}...`);
+
 
         // Create FormData object and append data
         const formDataToSend = new FormData();
@@ -65,8 +71,11 @@ function SatelliteDataForm() {
             // Assuming the backend returns a URL for the uploaded file
             setUploadedFileURL(response.data.fileURL);
 
-            // Handle the response or perform additional actions as needed
-            console.log(response.data);
+            if (response.status == 200) {
+                setSubmitDisabled(false);
+                setUploadStatus(`Successfully uploaded ${formData.dataFileName}!`);
+                setUploadStatusColor("green");
+            }
 
         } catch (error) {
             // Check if there are any validation errors in the response
@@ -75,6 +84,9 @@ function SatelliteDataForm() {
             } else {
                 console.error('Error uploading file:', error);
             }
+
+            setUploadStatus(`Failed to upload ${formData.dataFileName}`);
+            setUploadStatusColor("red");
         }
     };
 
@@ -88,6 +100,7 @@ function SatelliteDataForm() {
                 </div>
                 <UploadSubmitButton isSubmitDisabled={isSubmitDisabled}/>
             </form>
+            <small><font color={uploadStatusColor}>{uploadStatus}</font></small>
         </div>
 
     );
