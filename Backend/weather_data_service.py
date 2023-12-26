@@ -9,7 +9,7 @@ db = client["weatherDB"]
 weather_data_collection = db["weather_data"]
 weather_data_collection.create_index([('DateTime', 1)])
 
-def combine_weather_data(file_path, date, time, tide, location):
+def attach_weather_data_descriptors(file_path, date, time, tide, location):
 
     # Read in weather dataframe from file database
     weather_dataframe = pd.read_csv(file_path, index_col=0)

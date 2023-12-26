@@ -7,6 +7,7 @@ import os
 import csv, re
 
 import weather_data_service
+import gnss_data_service
 
 app = FastAPI()
 
@@ -43,8 +44,6 @@ async def startup_event():
         if not os.path.exists(folder_and_directory):
             os.makedirs(folder_and_directory)
             print(f"Directory '{folder_and_directory}' created successfully.")
-        else:
-            print(f"Directory '{folder_and_directory}' exists.")
 
 @app.get('/')
 async def health_check():
@@ -61,7 +60,18 @@ async def upload_gnss(data: UploadFile = Form(...), dataFileName: str = Form(...
             # Write content to the file
             file.write(contents.decode("utf-8"))
 
-        file_id = await gnss_file_collection.insert_one({"file_name": dataFileName, "file_path": file_path})
+        gnss_datafame = gnss_data_service.process_raw_gnss_data(file_path)
+
+        csv_file_path = directory_path + "/GNSS/" + source + "/" + dataFileName.split(".")[0] + ".csv"
+        gnss_datafame.to_csv(csv_file_path)
+
+        gnss_datafame = gnss_data_service.attach_gnss_data_descriptors(csv_file_path, source, location)
+
+        gnss_datafame.to_csv(csv_file_path)
+
+        await gnss_data_service.upload_gnss_data_db(gnss_datafame)
+
+        file_id = await gnss_file_collection.insert_one({"file_name": dataFileName, "file_path": file_path, "source": source, "location": location})
         return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
     except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))
@@ -76,7 +86,7 @@ async def upload_weather(data: UploadFile = Form(...), date: str = Form(...), ti
             # Write content to the file
             file.write("".join(contents.decode("utf-8")))
 
-        weather_dataframe = weather_data_service.combine_weather_data(file_path, date, time, tide, location)
+        weather_dataframe = weather_data_service.attach_weather_data_descriptors(file_path, date, time, tide, location)
         await weather_data_service.upload_weather_data_db(weather_dataframe)
 
         file_id = await weather_file_collection.insert_one({"file_name": dataFileName, "file_path": file_path, "date": date, "time": time, "tide": tide, "location": location})
