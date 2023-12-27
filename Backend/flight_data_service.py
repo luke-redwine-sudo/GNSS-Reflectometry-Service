@@ -14,10 +14,12 @@ def process_raw_flight_data(file_path):
     with open(file_path, 'r') as file:
         raw_flight_data = file.read()
 
+    # Break flight data log file into individual rows and only keep ATT and GPS lines
     segmented_flight_data = [entry for entry in raw_flight_data.split("\n") if entry.startswith("ATT") or entry.startswith("GPS")]
     att_flight_dataframe = pd.DataFrame(columns=['DateTime', 'Roll', 'Pitch', 'Yaw'])
     gps_flight_dataframe = pd.DataFrame(columns=['DateTime', 'GMS', 'GWk', 'Lat', 'Lng', 'Alt', 'Spd'])
 
+    # Iterate through lines and add line into relative data frames
     for entry in segmented_flight_data:
         if entry.startswith("ATT"):
             att_flight_data_split = entry.split(", ")
@@ -28,25 +30,33 @@ def process_raw_flight_data(file_path):
             flight_data_entry = {'DateTime': int(gps_flight_data_split[1]), 'GMS': int(gps_flight_data_split[3]) * 1000, 'GWk': int(gps_flight_data_split[4]) * 6.048e+11, 'Lat': gps_flight_data_split[7], 'Lng': gps_flight_data_split[8], 'Alt': gps_flight_data_split[9], 'Spd': gps_flight_data_split[10]}
             gps_flight_dataframe.loc[gps_flight_dataframe.index.size] = flight_data_entry
 
-    #att_flight_dataframe["DateTime"] = pd.to_datetime(att_flight_dataframe["DateTime"], unit="us")
+    # Convert dataframe to datetime
+    att_flight_dataframe["DateTime"] = pd.to_datetime(att_flight_dataframe["DateTime"], unit="us")
+    gps_flight_dataframe["DateTime"] = pd.to_datetime(gps_flight_dataframe["DateTime"], unit="us")
 
-    #gps_flight_dataframe["DateTime"] = pd.to_datetime(gps_flight_dataframe["DateTime"], unit="us")
-
-    # Merge dataframes with a tolerance of 200 ms
+    # Merge dataframes with a tolerance of 500 ms
     flight_dataframe = pd.merge_asof(
         att_flight_dataframe,
         gps_flight_dataframe,
         on="DateTime",
-        tolerance=600000000,
+        tolerance=pd.Timedelta("500ms"),
         direction="nearest"
     )
 
+    # Convert back into microseconds
+    flight_dataframe["DateTime"] = flight_dataframe["DateTime"].astype(int) * 1e-3
+
+    # Drop empty rows
     flight_dataframe = flight_dataframe.dropna()
-    flight_dataframe["DateTime"] = flight_dataframe["GWk"] + flight_dataframe["GMS"] + flight_dataframe["DateTime"] + 3.159504e+14 - 73380000
+
+    # Calculate GPS time and replace DateTime column
+    flight_dataframe["DateTime"] = flight_dataframe["GWk"] + flight_dataframe["GMS"] + 3.154e+14 + 5.184e+11 + 3.24e+10 - 3.6e+8 - 58000000
     flight_dataframe["DateTime"] = pd.to_datetime(flight_dataframe["DateTime"], unit="us")
+
+
+    flight_dataframe = flight_dataframe.drop_duplicates(subset=["DateTime"])
 
     return flight_dataframe
 
 async def upload_flight_data_db(flight_dataframe):
-    print(flight_dataframe.columns)
     flight_data_collection.insert_many(flight_dataframe.to_dict("records"))
