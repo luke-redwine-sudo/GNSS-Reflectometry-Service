@@ -5,7 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 # MongoDB Connection
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
 client = AsyncIOMotorClient(MONGO_URI)
-db = client["gnssDB"]
+db = client["data_storage"]
 gnss_data_collection = db["gnss_data"]
 gnss_data_collection.create_index([('DateTime', 1)])
 

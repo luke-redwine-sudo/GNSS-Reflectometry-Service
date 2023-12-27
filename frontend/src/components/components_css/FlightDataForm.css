@@ -14,9 +14,14 @@
     justify-content: center;
 }
 
+.horizontalflight {
+    display: flex;
+}
+
 .flightlocationdiv {
     display: flex;
     height: auto;
     width: auto;
     flex-direction: column;
+    align-items: center;
 }

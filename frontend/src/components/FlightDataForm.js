@@ -5,13 +5,11 @@ import axios from 'axios';
 
 import FileInput from './FileInput.js';
 import LocationTextInput from './LocationTextInput.js';
-import Date from './Date.js';
-import Time from './Time.js';
 import TideTextInput from './TideTextInput.js';
 import UploadSubmitButton from './UploadSubmitButton.js'
 
 import './components_css/FlightDataForm.css'
-
+import "./components_css/Datetime.css"
 
 function FlightDataForm() {
 
@@ -36,7 +34,7 @@ function FlightDataForm() {
         noClick: true,
         noKeyboard: true,
         accept: {
-            "csv/plain": [".csv"],
+            "log/plain": [".log"],
         },
         onDrop: (acceptedFile) => {
             acceptedFile.forEach((file) => {
@@ -99,7 +97,7 @@ function FlightDataForm() {
                 <h1>Flight Data Form</h1>
                 <div class="flightlocationdiv">
                     <LocationTextInput name="location" value={formData.location} onChange={handleChange}/>
-                    <FileInput name="data" value={formData.data} onClick={open} filename={formData.dataFileName} inputname="Flight" filetype=".csv"/>
+                    <FileInput name="data" value={formData.data} onClick={open} filename={formData.dataFileName} inputname="Flight" filetype=".log"/>
                 </div>
                 <UploadSubmitButton isSubmitDisabled={isSubmitDisabled}/>
             </form>

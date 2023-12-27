@@ -8,6 +8,7 @@ import csv, re
 
 import weather_data_service
 import gnss_data_service
+import flight_data_service
 
 app = FastAPI()
 
@@ -70,6 +71,7 @@ async def upload_gnss(data: UploadFile = Form(...), dataFileName: str = Form(...
         gnss_datafame.to_csv(csv_file_path)
 
         await gnss_data_service.upload_gnss_data_db(gnss_datafame)
+        await gnss_file_collection.insert_one({"file_name": dataFileName.split(".")[0] + ".csv", "file_path": file_path.split(".")[0] + ".csv", "source": source, "location": location})
 
         file_id = await gnss_file_collection.insert_one({"file_name": dataFileName, "file_path": file_path, "source": source, "location": location})
         return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
@@ -87,6 +89,8 @@ async def upload_weather(data: UploadFile = Form(...), date: str = Form(...), ti
             file.write("".join(contents.decode("utf-8")))
 
         weather_dataframe = weather_data_service.attach_weather_data_descriptors(file_path, date, time, tide, location)
+        weather_dataframe.to_csv(file_path)
+
         await weather_data_service.upload_weather_data_db(weather_dataframe)
 
         file_id = await weather_file_collection.insert_one({"file_name": dataFileName, "file_path": file_path, "date": date, "time": time, "tide": tide, "location": location})
@@ -118,6 +122,14 @@ async def upload_flight(data: UploadFile = Form(...), dataFileName: str = Form(.
         with open(file_path, 'w') as file:
             # Write content to the file
             file.write("".join(contents.decode("utf-8")))
+
+        flight_dataframe = flight_data_service.process_raw_flight_data(file_path)
+
+        csv_file_path = directory_path + "/" + dataFileName.split(".")[0] + ".csv"
+        flight_dataframe.to_csv(csv_file_path)
+
+        await flight_data_service.upload_flight_data_db(flight_dataframe)
+        await flight_file_collection.insert_one({"file_name": dataFileName.split(".")[0] + ".csv", "file_path": file_path.split(".")[0] + ".csv", "location": location})
 
         file_id = await flight_file_collection.insert_one({"file_name": dataFileName, "file_path": file_path, "location":location})
         return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)

@@ -5,7 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 # MongoDB Connection
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
 client = AsyncIOMotorClient(MONGO_URI)
-db = client["weatherDB"]
+db = client["data_storage"]
 weather_data_collection = db["weather_data"]
 weather_data_collection.create_index([('DateTime', 1)])
 
