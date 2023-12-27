@@ -42,6 +42,8 @@ function VideoForm() {
             acceptedFile.forEach((file) => {
                 setFormData((prevFormData) => ({ ...prevFormData, ["video"]: file }));
                 setFormData((prevFormData) => ({ ...prevFormData, ["videoFileName"]: file.name }));
+                setUploadStatusColor("#8EC5FC");
+                setUploadStatus("");
             })
         },
     });
@@ -49,6 +51,8 @@ function VideoForm() {
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+        setUploadStatusColor("#8EC5FC");
+        setUploadStatus("");
     };
 
     const handleSubmit = async (event) => {

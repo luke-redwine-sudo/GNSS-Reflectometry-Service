@@ -42,6 +42,8 @@ function WeatherDataForm() {
             acceptedFile.forEach((file) => {
                 setFormData((prevFormData) => ({ ...prevFormData, ["data"]: file }));
                 setFormData((prevFormData) => ({ ...prevFormData, ["dataFileName"]: file.name }));
+                setUploadStatusColor("#8EC5FC");
+                setUploadStatus("");
             })
         },
     });
@@ -49,6 +51,8 @@ function WeatherDataForm() {
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+        setUploadStatusColor("#8EC5FC");
+        setUploadStatus("");
     };
 
     const handleSubmit = async (event) => {
