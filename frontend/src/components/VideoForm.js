@@ -15,14 +15,14 @@ import './components_css/VideoForm.css'
 
 function VideoForm() {
 
-    const [formData, setFormData] = useState({location: "Jeanette Creek", video: null, videoFileName:""});
+    const [formData, setFormData] = useState({location: "Jeanette Creek", date: "", time: "", video: null, videoFileName:""});
     const [isSubmitDisabled, setSubmitDisabled] = useState(true);
     const [uploadedFileURL, setUploadedFileURL] = useState(null);
     const [uploadStatus, setUploadStatus] = useState("");
     const [uploadStatusColor, setUploadStatusColor] = useState("#8EC5FC");
 
     useEffect(() => {
-        if (formData.location != "" && formData.video != null && formData.videoFileName != "") {
+        if (formData.location != "" && formData.date != "" && formData.time != "" && formData.video != null && formData.videoFileName != "") {
             setSubmitDisabled(false);
         }
         else {
@@ -63,6 +63,8 @@ function VideoForm() {
         // Create FormData object and append data
         const formDataToSend = new FormData();
         formDataToSend.append('video', formData.video);
+        formDataToSend.append('date', formData.date);
+        formDataToSend.append('time', formData.time);
         formDataToSend.append('videoFileName', formData.videoFileName);
         formDataToSend.append('location', formData.location);
 
@@ -101,9 +103,17 @@ function VideoForm() {
         <div class="videoformorg">
             <form onSubmit={handleSubmit}>
                 <h1>Video Data Form</h1>
-                <div class="videolocationdiv">
-                    <LocationTextInput name="location" value={formData.location} onChange={handleChange}/>
-                    <FileInput name="video" value={formData.video} onClick={open} filename={formData.videoFileName} inputname="Video" filetype=".mp4"/>
+                <div class="horizontalvideo">
+                    <div class="datetimewrapper">
+                        <Date name="date" value={formData.date} onChange={handleChange} />
+                        <Time name="time" value={formData.time} onChange={handleChange} />
+                    </div>
+                    <div class="videolocationdiv">
+                        <div>
+                            <LocationTextInput name="location" value={formData.location} onChange={handleChange}/>
+                            <FileInput name="video" value={formData.video} onClick={open} filename={formData.videoFileName} inputname="Video" filetype=".mp4"/>
+                        </div>
+                    </div>
                 </div>
                 <UploadSubmitButton isSubmitDisabled={isSubmitDisabled}/>
             </form>

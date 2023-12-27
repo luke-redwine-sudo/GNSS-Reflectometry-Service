@@ -137,7 +137,7 @@ async def upload_flight(data: UploadFile = Form(...), dataFileName: str = Form(.
         raise HTTPException(status_code=422, detail=str(e))
 
 @app.post("/upload_video")
-async def upload_video(video: UploadFile = Form(...), videoFileName: str = Form(...), location: str = Form(...)):
+async def upload_video(video: UploadFile = Form(...), videoFileName: str = Form(...), location: str = Form(...), date: str = Form(...), time: str = Form(...)):
     try:
         contents = await video.read()
         file_path = directory_path + "/Video/" + videoFileName
@@ -146,7 +146,7 @@ async def upload_video(video: UploadFile = Form(...), videoFileName: str = Form(
             # Write content to the file
             file.write(contents)
 
-        file_id = await video_file_collection.insert_one({"file_name": videoFileName, "file_path": file_path, "location":location})
+        file_id = await video_file_collection.insert_one({"file_name": videoFileName, "file_path": file_path, "date": date, "time": time, "location":location})
         return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
     except Exception as e:
         raise HTTPException(status_code=422, detail=str(e))
