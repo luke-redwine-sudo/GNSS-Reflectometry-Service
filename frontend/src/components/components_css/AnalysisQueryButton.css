@@ -1,0 +1,27 @@
+.analysisquerybutton {
+    border: 2px solid #C4E1F3;
+    background-color: #0A375D;
+    color: #8EC5FC;
+    height: 50px;
+    width: 180px;
+    font-size: 1em;
+    padding: 0px;
+    line-height: 0px;
+    cursor: pointer;
+    border-radius: 20px;
+    font-weight: bold;
+    margin: 10px;
+    transition: background-color 0.25s, color 0.25s;
+}
+
+.analysisquerybutton:hover {
+    border: 2px solid #0A375D;
+    background-color: #fff;
+    color: #0A375D;
+}
+
+.analysisquerybutton:disabled {
+    border: 2px solid #0A375D;
+    background-color: #808080;
+    color: #fff;
+}

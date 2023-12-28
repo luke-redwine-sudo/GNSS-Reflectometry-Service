@@ -25,9 +25,13 @@ def process_raw_gnss_data(file_path):
                 date_split = entry.split()
                 datetime = date_split[2] + "-" + date_split[3] + "-" + date_split[1] + " " + date_split[4] + ":" + date_split[5] + ":" + date_split[6]
             elif ("G" in entry):
-                gnss_data_split = entry.split()
-                gnss_data_entry = {'DateTime': datetime, 'Satellite': gnss_data_split[0], 'Signal_Strength': gnss_data_split[4]}
-                gnss_dataframe.loc[gnss_dataframe.index.size] = gnss_data_entry
+                gnss_data_split = entry.replace("-", " ").split()
+                if (len(gnss_data_split) == 5):
+                    gnss_data_entry = {'DateTime': datetime, 'Satellite': gnss_data_split[0], 'Signal_Strength': gnss_data_split[4]}
+                    gnss_dataframe.loc[gnss_dataframe.index.size] = gnss_data_entry
+                elif (len(gnss_data_split) == 6):
+                    gnss_data_entry = {'DateTime': datetime, 'Satellite': gnss_data_split[0], 'Signal_Strength': gnss_data_split[5]}
+                    gnss_dataframe.loc[gnss_dataframe.index.size] = gnss_data_entry
 
     return gnss_dataframe
 
