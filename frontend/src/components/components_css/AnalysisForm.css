@@ -29,3 +29,63 @@
     align-items: center;
     justify-content: center;
 }
+
+hr {
+    background-color: #8EC5FC;
+    position: relative;
+    height: 1px; /* Adjust the height/thickness as needed */
+    border: none;
+}
+
+hr::before,
+hr::after {
+    content: '';
+    position: absolute;
+    width: 10px; /* Adjust the size of the pointed ends */
+    height: 10px; /* Adjust the size of the pointed ends */
+    background-color: #0A375D; /* Adjust the color as needed */
+}
+
+hr::before {
+    top: -5px;
+    left: 0;
+    border-top-left-radius: 5px; /* Create a rounded corner for the top left */
+}
+
+hr::after {
+    bottom: -5px;
+    right: 0;
+    border-bottom-right-radius: 5px; /* Create a rounded corner for the bottom right */
+}
+
+.datesformorg {
+    text-align: center;
+    color: #8EC5FC;
+    background-color: #0A375D;
+    font-weight: bold;
+    border: 2px solid #0A375D;
+    border-radius: 20px;
+    margin: 15px;
+    height: 325px;
+    width: 425px;
+    display: table;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.horizontaldates {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    width: auto;
+}
+
+.dateslocationdiv {
+    display: flex;
+    height: auto;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+}

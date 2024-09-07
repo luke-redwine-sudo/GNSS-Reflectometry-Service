@@ -1,14 +1,16 @@
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi.middleware.cors import CORSMiddleware
 from bson import ObjectId
 import os
 import csv, re
 
-import weather_data_service
-import gnss_data_service
+import analysis_service
 import flight_data_service
+import gnss_data_service
+import weather_data_service
 
 app = FastAPI()
 
@@ -31,7 +33,11 @@ satellite_file_collection = db["satellite_files"]
 flight_file_collection = db["flight_files"]
 video_file_collection = db["video_files"]
 
-directory_path = "GNSS_Data_Storage"
+directory_path = "/GNSS_Data_Storage"
+full_directory_path = "/app" + directory_path
+
+app.mount(directory_path, StaticFiles(directory=full_directory_path), name="static")
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -40,7 +46,7 @@ async def startup_event():
 
     for folder in folder_list:
 
-        folder_and_directory = directory_path + "/" + folder
+        folder_and_directory = full_directory_path + "/" + folder
 
         if not os.path.exists(folder_and_directory):
             os.makedirs(folder_and_directory)
@@ -55,7 +61,7 @@ async def health_check():
 async def upload_gnss(data: UploadFile = Form(...), dataFileName: str = Form(...), source: str = Form(...), location: str = Form(...)):
     try:
         contents = await data.read()
-        file_path = directory_path + "/GNSS/" + source + "/" + dataFileName
+        file_path = full_directory_path + "/GNSS/" + source + "/" + dataFileName
 
         with open(file_path, 'w') as file:
             # Write content to the file
@@ -63,7 +69,7 @@ async def upload_gnss(data: UploadFile = Form(...), dataFileName: str = Form(...
 
         gnss_datafame = gnss_data_service.process_raw_gnss_data(file_path)
 
-        csv_file_path = directory_path + "/GNSS/" + source + "/" + dataFileName.split(".")[0] + ".csv"
+        csv_file_path = full_directory_path + "/GNSS/" + source + "/" + dataFileName.split(".")[0] + ".csv"
         gnss_datafame.to_csv(csv_file_path)
 
         gnss_datafame = gnss_data_service.attach_gnss_data_descriptors(csv_file_path, source, location)
@@ -82,7 +88,7 @@ async def upload_gnss(data: UploadFile = Form(...), dataFileName: str = Form(...
 async def upload_weather(data: UploadFile = Form(...), date: str = Form(...), time: str = Form(...), tide: float = Form(...), dataFileName: str = Form(...), location: str = Form(...)):
     try:
         contents = await data.read()
-        file_path = directory_path + "/Weather/" + dataFileName
+        file_path = full_directory_path + "/Weather/" + dataFileName
 
         with open(file_path, 'w') as file:
             # Write content to the file
@@ -102,7 +108,7 @@ async def upload_weather(data: UploadFile = Form(...), date: str = Form(...), ti
 async def upload_satellite(data: UploadFile = Form(...), dataFileName: str = Form(...)):
     try:
         contents = await data.read()
-        file_path = directory_path + "/Satellite/" + dataFileName
+        file_path = full_directory_path + "/Satellite/" + dataFileName
 
         with open(file_path, 'w') as file:
             # Write content to the file
@@ -117,7 +123,7 @@ async def upload_satellite(data: UploadFile = Form(...), dataFileName: str = For
 async def upload_flight(data: UploadFile = Form(...), dataFileName: str = Form(...), location: str = Form(...)):
     try:
         contents = await data.read()
-        file_path = directory_path + "/Flight/" + dataFileName
+        file_path = full_directory_path + "/Flight/" + dataFileName
 
         with open(file_path, 'w') as file:
             # Write content to the file
@@ -125,7 +131,7 @@ async def upload_flight(data: UploadFile = Form(...), dataFileName: str = Form(.
 
         flight_dataframe = flight_data_service.process_raw_flight_data(file_path)
 
-        csv_file_path = directory_path + "/" + dataFileName.split(".")[0] + ".csv"
+        csv_file_path = full_directory_path + "/" + dataFileName.split(".")[0] + ".csv"
         flight_dataframe.to_csv(csv_file_path)
 
         await flight_data_service.upload_flight_data_db(flight_dataframe)
@@ -140,13 +146,36 @@ async def upload_flight(data: UploadFile = Form(...), dataFileName: str = Form(.
 async def upload_video(video: UploadFile = Form(...), videoFileName: str = Form(...), location: str = Form(...), date: str = Form(...), time: str = Form(...)):
     try:
         contents = await video.read()
-        file_path = directory_path + "/Video/" + videoFileName
+        file_path = full_directory_path + "/Video/" + videoFileName
 
         with open(file_path, 'wb') as file:
             # Write content to the file
             file.write(contents)
 
-        file_id = await video_file_collection.insert_one({"file_name": videoFileName, "file_path": file_path, "date": date, "time": time, "location":location})
+        file_id = await video_file_collection.insert_one({"file_name": videoFileName, "file_path": file_path, "datetime": date + " " + time, "location":location})
         return JSONResponse(content={"file_id": str(file_id.inserted_id)}, status_code=200)
     except Exception as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+@app.post("/retrieve_plot_attributes")
+async def retrieve_plot_attributes(analysis_option: str = Form(...), location: str = Form(...), Start_Date: str = Form(...), Start_Time: str = Form(...), End_Date: str = Form(...), End_Time: str = Form(...)):
+    try:
+        response = JSONResponse(content={"mission": "Success"}, status_code=200)
+
+        if (analysis_option == "Video"):
+
+            videos = await analysis_service.find_videos(Start_Date, Start_Time, End_Date, End_Time, location)
+
+            # Convert Video objects to a dictionary that can be JSON serialized
+            video_data = [
+                {"type": "video", "id": str(video["_id"]), "name": str(video["file_name"]), "path": str(video["file_path"]), "location": str(video["location"])} for video in videos
+            ]
+
+            print(video_data)
+
+            response = JSONResponse(content=video_data, status_code=200)
+
+        return response
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=422, detail=str(e))

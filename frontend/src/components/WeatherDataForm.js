@@ -16,14 +16,14 @@ import "./components_css/Datetime.css"
 
 function WeatherDataForm() {
 
-    const [formData, setFormData] = useState({location: "Jeanette Creek", date: "", time: "", tide: null, data: null, dataFileName:""});
+    const [formData, setFormData] = useState({location: "Jeanette Creek", Date: "", Time: "", tide: null, data: null, dataFileName:""});
     const [isSubmitDisabled, setSubmitDisabled] = useState(true);
     const [uploadedFileURL, setUploadedFileURL] = useState(null);
     const [uploadStatus, setUploadStatus] = useState("");
     const [uploadStatusColor, setUploadStatusColor] = useState("#8EC5FC");
 
     useEffect(() => {
-        if (formData.location != "" && formData.date != "" && formData.time != "" && formData.tide != null && formData.data != null && formData.dataFileName != "") {
+        if (formData.location != "" && formData.Date != "" && formData.Time != "" && formData.tide != null && formData.data != null && formData.dataFileName != "") {
             setSubmitDisabled(false);
         }
         else {
@@ -63,8 +63,8 @@ function WeatherDataForm() {
         // Create FormData object and append data
         const formDataToSend = new FormData();
         formDataToSend.append('data', formData.data);
-        formDataToSend.append('date', formData.date);
-        formDataToSend.append('time', formData.time);
+        formDataToSend.append('date', formData.Date);
+        formDataToSend.append('time', formData.Time);
         formDataToSend.append('tide', formData.tide);
         formDataToSend.append('dataFileName', formData.dataFileName);
         formDataToSend.append('location', formData.location);
@@ -106,8 +106,8 @@ function WeatherDataForm() {
                 <h1>Weather Data Form</h1>
                 <div class="horizontalweather">
                     <div class="datetimewrapper">
-                        <Date name="date" value={formData.date} onChange={handleChange} />
-                        <Time name="time" value={formData.time} onChange={handleChange} />
+                        <Date name="Date" value={formData.Date} onChange={handleChange} />
+                        <Time name="Time" value={formData.Time} onChange={handleChange} />
                     </div>
                     <div class="weatherlocationdiv">
                         <div>

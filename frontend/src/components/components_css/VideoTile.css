@@ -1,4 +1,4 @@
-.weatherformorg {
+.videotileformorg {
     text-align: center;
     color: #8EC5FC;
     background-color: #0A375D;
@@ -14,13 +14,18 @@
     justify-content: center;
 }
 
-.horizontalweather {
+.horizontalvideotile {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    width: auto;
 }
 
-.weatherlocationdiv {
+.videotilelocationdiv {
     display: flex;
     height: auto;
     width: auto;
     align-items: center;
+    justify-content: center;
 }

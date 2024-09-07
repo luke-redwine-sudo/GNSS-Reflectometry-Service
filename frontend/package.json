@@ -13,7 +13,8 @@
     "web-vitals": "^2.1.4",
     "datetime-picker": "0.6.0",
     "axios":"1.6.2",
-    "react-dropzone": "14.2.3"
+    "react-dropzone": "14.2.3",
+    "react-player": "2.16.0"
   },
   "scripts": {
     "start": "react-scripts start",
